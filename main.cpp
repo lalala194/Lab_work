@@ -4,4 +4,7 @@
 int main() {
   TestingSystem<int> test;
   test.TestingInitialSize();
+  test.TestingIncreasingOnSize();
+  test.TestingIncreasingInSize();
+  test.TestingTwoStacks();
 }
