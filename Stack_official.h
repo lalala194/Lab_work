@@ -66,7 +66,28 @@ public:
   void TestingTwoStacks();
   
 private:
-  void TestingArraySize(uint64_t initial_size);
+  void TestingInitCandidateSize(uint64_t initial_size);
+  void TestingCandidateOnSize(uint64_t initial_size, uint64_t increasing_size);
+  
+  void CheckingTestArrayStack1();
+  void TestArrayStack1(IStack<T>* array_stack);
+  
+  void CheckingTestArrayStack2();
+  void TestArrayStack2(IStack<T>* array_stack);
+  
+  void CheckingTestArrayStack3();
+  void TestArrayStack3(IStack<T>* array_stack);
+  
+  
+  void CheckingTestListStack1();
+  void TestListStack1(IStack<T>* list_stack);
+  
+  void CheckingTestListStack2();
+  void TestListStack2(IStack<T>* list_stack);
+  
+  void CheckingTestListStack3();
+  void TestListStack3(IStack<T>* list_stack);
+
   uint64_t best_initial_sz = 0;
-  uint64_t best_increasing_sz = 0;
+   std::pair<uint64_t, long double> increasing_sz;
 };
