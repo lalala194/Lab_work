@@ -6,7 +6,7 @@
 #include "Stack_official.h"
 
 template <typename T>
-ArrayStack<T>::ArrayStack(uint64_t initial_size) : initial_capacity(initial_size), capacity(initial_size), size(0) {
+ArrayStack<T>::ArrayStack(uint64_t initial_size) : initial_capacity{initial_size, 0}, capacity(initial_size), size(0) {
   array = (T*)malloc(sizeof(T) * capacity);
   if (array == nullptr) {
     throw std::bad_alloc();
@@ -15,11 +15,39 @@ ArrayStack<T>::ArrayStack(uint64_t initial_size) : initial_capacity(initial_size
 
 template <typename T>
 ArrayStack<T>::ArrayStack(uint64_t initial_size, uint64_t increasing_on) :
-initial_capacity(initial_size), capacity(increasing_on), size(0) {
+capacity(initial_size), initial_capacity{increasing_on, 0}, size(0) {
   array = (T*)malloc(sizeof(T) * capacity);
   if (array == nullptr) {
     throw std::bad_alloc();
   }
+}
+
+template <typename T>
+ArrayStack<T>::ArrayStack(uint64_t initial_size, uint64_t increasing_in1, uint64_t increasing_in2) : capacity(initial_size), initial_capacity{increasing_in1, increasing_in2}, size(0) {
+  array = (T*)malloc(sizeof(T) * capacity);
+  if (array == nullptr) {
+    throw std::bad_alloc();
+  }
+}
+
+template <typename T>
+void ArrayStack<T>::Resize(uint64_t initial_size, uint64_t increasing_in1, uint64_t increasing_in2) {
+  capacity = initial_size;
+  initial_capacity = {increasing_in1, increasing_in2};
+  array = (T*)realloc(array, sizeof(T) * capacity);
+  if (array == nullptr) {
+    throw std::bad_alloc();
+  }
+}
+
+template <typename T>
+void ArrayStack<T>::Resize(uint64_t initial_size) {
+  Resize(initial_size, initial_size, 0);
+}
+
+template <typename T>
+void ArrayStack<T>::Resize(uint64_t initial_size, uint64_t increasing_on) {
+  Resize(initial_size, increasing_on, 0);
 }
 
 template <typename T>
@@ -29,6 +57,9 @@ void ArrayStack<T>::Destroy() {
   }
   free(array);
   array = nullptr;
+  size = 0;
+  capacity = 0;
+  initial_capacity = {0, 0};
 }
 
 template <typename T>
@@ -39,8 +70,14 @@ void ArrayStack<T>::Push(T value) {
   array[size] = value;
   ++size;
   if (size >= capacity) {
-    array = (T*)realloc(array, sizeof(T) * (capacity + initial_capacity));
-    capacity += initial_capacity;
+    if (initial_capacity.second != 0) {
+      array = (T*)realloc(array, sizeof(T) * ((capacity * initial_capacity.first) / initial_capacity.second));
+      capacity *= initial_capacity.first;
+      capacity /= initial_capacity.second;
+    } else {
+      array = (T*)realloc(array, sizeof(T) * (capacity + initial_capacity.first));
+      capacity += initial_capacity.first;
+    }
   }
   if (array == nullptr) {
     throw std::bad_alloc();
