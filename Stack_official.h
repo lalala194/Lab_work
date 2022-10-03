@@ -109,7 +109,7 @@ private:
   void ExecutePop(IStack<T>* stack, size_t number_of_elements);
   
   uint64_t best_initial_sz = 0;
-  std::pair<std::pair<uint64_t, uint64_t>, long double> increasing_sz = {{0, 0}, 4};
+  std::pair<std::pair<uint64_t, uint64_t>, long double> increasing_sz = {{0, 0}, 0.0};
   ArrayStack<T> array_stack;
   ListStack<T> list_stack;
 };
