@@ -8,20 +8,36 @@
 #include "Stack_official.h"
 
 template <typename T>
-void TestingSystem<T>::TestingInitCandidateSize(uint64_t initial_size) {
-    ArrayStack<T> array_stack(initial_size);
+void TestingSystem<T>::ExecutePush(IStack<T> *stack, size_t number_of_elements, int begin, int step) {
+    for (size_t i = 0; i < number_of_elements; ++i) {
+        stack->Push(begin);
+        begin += step;
+    }
+}
+template <typename T>
+void TestingSystem<T>::ExecutePop(IStack<T>* stack, size_t number_of_elements) {
+    for (size_t i = 0; i < number_of_elements; ++i) {
+        stack->Pop();
+    }
+}
+template <typename T>
+void TestingSystem<T>::RequestHandler(IStack<T>* stack, const std::string& command, size_t number_of_elements, int begin, int step) {
+    if (command == "push") {
+        ExecutePush(stack, number_of_elements, begin, step);
+    } else {
+        ExecutePop(stack, number_of_elements);
+    }
+}
+
+template <typename T>
+void TestingSystem<T>::TestRequester(IStack<T>* array_stack) {
     const uint64_t push_amount1 = 1e6;
     const uint64_t push_amount2 = 5 * 1e5;
-    for (int i = 0; i < push_amount1; ++i) {
-        array_stack.Push(i);
-    }
-    for (int i = 0; i < push_amount2; ++i) {
-        array_stack.Pop();
-    }
-    for (int i = 0; i < push_amount2; ++i) {
-        array_stack.Push(i + 1);
-    }
-    
+    std::string command1 = "push";
+    std::string command2 = "pop";
+    RequestHandler(array_stack, command1, push_amount1, 1, 3);
+    RequestHandler(array_stack, command2, push_amount2, 1, 3);
+    RequestHandler(array_stack, command1, push_amount2, 1, 3);
 }
 
 template <typename T>
@@ -34,12 +50,14 @@ void TestingSystem<T>::TestingInitialSize() {
         ot << init_size << '\n';
         long double middle = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
+            array_stack.Resize(init_size);
             std::clock_t start = clock();
-            TestingInitCandidateSize(init_size);
+            TestRequester(&array_stack);
             std::clock_t end = clock();
             long double seconds = (long double)(end - start) / CLOCKS_PER_SEC;
             ot << std::fixed << std::showpoint  << std::setprecision(8) << seconds << " ";
             middle += seconds;
+            array_stack.Destroy();
         }
         middle /= (150.);
         ot << std::fixed << std::showpoint  << std::setprecision(8) << middle;
@@ -59,22 +77,6 @@ void TestingSystem<T>::TestingInitialSize() {
 }
 
 template <typename T>
-void TestingSystem<T>::TestingCandidateOnSize(uint64_t initial_size, uint64_t increasing_size) {
-    ArrayStack<T> array_stack(initial_size, increasing_size);
-    const uint64_t push_amount1 = 1e6;
-    const uint64_t push_amount2 = 5 * 1e5;
-    for (int i = 0; i < push_amount1; ++i) {
-        array_stack.Push(i);
-    }
-    for (int i = 0; i < push_amount2; ++i) {
-        array_stack.Pop();
-    }
-    for (int i = 0; i < push_amount2; ++i) {
-        array_stack.Push(i + 1);
-    }
-}
-
-template <typename T>
 void TestingSystem<T>::TestingIncreasingOnSize() {
     std::ofstream ot("optimal_increasing_size_BY_some.txt");
     std::vector<uint64_t> increasing_on_candidates = {1000, 5000, 10000, 50000, 75000, 100000};
@@ -84,12 +86,14 @@ void TestingSystem<T>::TestingIncreasingOnSize() {
         ot << candidates << '\n';
         long double middle = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
+            array_stack.Resize(best_initial_sz, candidates);
             std::clock_t start = clock();
-            TestingCandidateOnSize(best_initial_sz, candidates);
+            TestRequester(&array_stack);
             std::clock_t end = clock();
             long double seconds = (long double)(end - start) / CLOCKS_PER_SEC;
             ot << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
             middle += seconds;
+            array_stack.Destroy();
         }
         middle /= (150.);
         ot << std::fixed << std::showpoint << std::setprecision(8) << middle;
@@ -105,7 +109,7 @@ void TestingSystem<T>::TestingIncreasingOnSize() {
             index_of_best = i;
         }
     }
-    increasing_sz = {increasing_on_candidates[index_of_best], working_time[index_of_best]};
+    increasing_sz = {{increasing_on_candidates[index_of_best], 0}, working_time[index_of_best]};
 }
 
 template <typename T>
@@ -118,13 +122,14 @@ void TestingSystem<T>::TestingIncreasingInSize() {
         ot << candidates.first << " " << candidates.second << '\n';
         long double middle = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
+            array_stack.Resize(best_initial_sz, candidates.first, candidates.second);
             std::clock_t start = clock();
-            uint64_t increasing_in = (candidates.first * best_initial_sz) / candidates.second;
-            TestingCandidateOnSize(best_initial_sz, increasing_in);
+            TestRequester(&array_stack);
             std::clock_t end = clock();
             long double seconds = (long double)(end - start) / CLOCKS_PER_SEC;
             ot << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
             middle += seconds;
+            array_stack.Destroy();
         }
         middle /= (150.);
         ot << std::fixed << std::showpoint << std::setprecision(8) << middle;
@@ -132,6 +137,7 @@ void TestingSystem<T>::TestingIncreasingInSize() {
         ot << '\n';
         working_time.push_back(middle);
     }
+    
     size_t index_of_best = 0;
     long double temp = 10.0;
     for (size_t i = 0; i < working_time.size(); ++i) {
@@ -141,26 +147,22 @@ void TestingSystem<T>::TestingIncreasingInSize() {
         }
     }
     if (increasing_sz.second > working_time[index_of_best]) {
-        increasing_sz = {(increasing_in_candidates[index_of_best].first * best_initial_sz) / increasing_in_candidates[index_of_best].second, working_time[index_of_best]};
+        increasing_sz = {{increasing_in_candidates[index_of_best].first, increasing_in_candidates[index_of_best].second}, working_time[index_of_best]};
     }
 }
 
 template <typename T>
-void TestingSystem<T>::TestArrayStack1(IStack<T>* array_stack) {
+void TestingSystem<T>::TestArrayStack1(IStack<T> *array_stack) {
     int initial_push = 1e6;
-    for (int i = 0; i < initial_push; ++i) {
-        array_stack->Push(i + 1);
-    }
+    std::string command1 = "push";
+    std::string command2 = "pop";
+    RequestHandler(array_stack, command1, initial_push, 0, 4);
     while (array_stack->Size() >= 100000) {
         initial_push /= 2;
-        for (int i = 0; i < initial_push; ++i) {
-            array_stack->Pop();
-        }
+        RequestHandler(array_stack, command2, initial_push, 0, 4);
         int quarter = initial_push / 2;
         initial_push += (quarter);
-        for (int i = 0; i < quarter; ++i) {
-            array_stack->Push(i);
-        }
+        RequestHandler(array_stack, command1, quarter, 0, 4);
     }
 }
 
@@ -169,14 +171,16 @@ void TestingSystem<T>::CheckingTestArrayStack1() {
     std::ofstream ot("comparing_two_stacks.txt");
     long double middle = 0;
     size_t test_amount = 150;
+    array_stack.Destroy();
     for (size_t cases = 0; cases < test_amount; ++cases) {
+        array_stack.Resize(best_initial_sz, increasing_sz.first.first, increasing_sz.first.second);
         std::clock_t start = clock();
-        ArrayStack<T> stack(best_initial_sz, increasing_sz.first);
-        TestArrayStack1(&stack);
+        TestArrayStack1(&array_stack);
         std::clock_t end = clock();
         long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
+        array_stack.Destroy();
     }
     ot << std::fixed << std::showpoint  << std::setprecision(8) << (middle / 150.);
     ot << '\n';
@@ -184,21 +188,17 @@ void TestingSystem<T>::CheckingTestArrayStack1() {
 }
 
 template <typename T>
-void TestingSystem<T>::TestListStack1(IStack<T>* list_stack) {
+void TestingSystem<T>::TestListStack1(IStack<T> *list_stack) {
     int initial_push = 1e6;
-    for (int i = 0; i < initial_push; ++i) {
-        list_stack->Push(i + 1);
-    }
+    std::string command1 = "push";
+    std::string command2 = "pop";
+    RequestHandler(list_stack, command1, initial_push, 100, 2);
     while (list_stack->Size() >= 100000) {
         initial_push /= 2;
-        for (int i = 0; i < initial_push; ++i) {
-            list_stack->Pop();
-        }
+        RequestHandler(list_stack, command2, initial_push, 100, 2);
         int quarter = initial_push / 2;
         initial_push += (quarter);
-        for (int i = 0; i < quarter; ++i) {
-            list_stack->Push(i);
-        }
+        RequestHandler(list_stack, command1, quarter, 100, 2);
     }
 }
 
@@ -209,12 +209,12 @@ void TestingSystem<T>::CheckingTestListStack1() {
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
         std::clock_t start = clock();
-        ListStack<T> stack;
-        TestListStack1(&stack);
+        TestListStack1(&list_stack);
         std::clock_t end = clock();
         long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
+        list_stack.Destroy();
     }
     ot << std::fixed << std::showpoint  << std::setprecision(8) << (middle / 150.);
     ot << '\n';
@@ -222,33 +222,19 @@ void TestingSystem<T>::CheckingTestListStack1() {
 }
 
 template <typename T>
-void TestingSystem<T>::TestArrayStack2(IStack<T>* array_stack) {
+void TestingSystem<T>::TestArrayStack2(IStack<T> *array_stack) {
     int initial_push = 1e6;
-    for (int i = 0; i < initial_push; ++i) {
-        array_stack->Push(i + 1);
-    }
-    
-    for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 10000; ++j) {
-            array_stack->Pop();
-        }
-    }
-    for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 10000; ++j) {
-            array_stack->Push(i + 1);
-        }
-    }
-    
+    std::string command1 = "push";
+    std::string command2 = "pop";
+    RequestHandler(array_stack, command1, initial_push, 2, 8);
+    RequestHandler(array_stack, command2, initial_push, 2, 8);
+    RequestHandler(array_stack, command1, initial_push, 2, 8);
     while (array_stack->Size() >= 100000) {
         initial_push /= 2;
-        for (int i = 0; i < initial_push; ++i) {
-            array_stack->Pop();
-        }
+        RequestHandler(array_stack, command2, initial_push, 2, 8);
         int quarter = initial_push / 2;
         initial_push += (quarter);
-        for (int i = 0; i < quarter; ++i) {
-            array_stack->Push(i);
-        }
+        RequestHandler(array_stack, command1, quarter, 2, 8);
     }
 }
 
@@ -258,13 +244,14 @@ void TestingSystem<T>::CheckingTestArrayStack2() {
     long double middle = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
+        array_stack.Resize(best_initial_sz, increasing_sz.first.first, increasing_sz.first.second);
         std::clock_t start = clock();
-        ArrayStack<T> stack(best_initial_sz, increasing_sz.first);
-        TestArrayStack2(&stack);
+        TestArrayStack2(&array_stack);
         std::clock_t end = clock();
         long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
-        ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        ot << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
+        array_stack.Destroy();
     }
     ot << std::fixed << std::showpoint  << std::setprecision(8) << (middle / 150.);
     ot << '\n';
@@ -272,33 +259,19 @@ void TestingSystem<T>::CheckingTestArrayStack2() {
 }
 
 template <typename T>
-void TestingSystem<T>::TestListStack2(IStack<T>* list_stack) {
+void TestingSystem<T>::TestListStack2(IStack<T> *list_stack) {
     int initial_push = 1e6;
-    for (int i = 0; i < initial_push; ++i) {
-        list_stack->Push(i + 1);
-    }
-    
-    for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 10000; ++j) {
-            list_stack->Pop();
-        }
-    }
-    for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 10000; ++j) {
-            list_stack->Push(i + 1);
-        }
-    }
-    
+    std::string command1 = "push";
+    std::string command2 = "pop";
+    RequestHandler(list_stack, command1, initial_push, 2, 8);
+    RequestHandler(list_stack, command2, initial_push, 2, 8);
+    RequestHandler(list_stack, command1, initial_push, 2, 8);
     while (list_stack->Size() >= 100000) {
         initial_push /= 2;
-        for (int i = 0; i < initial_push; ++i) {
-            list_stack->Pop();
-        }
+        RequestHandler(list_stack, command2, initial_push, 2, 8);
         int quarter = initial_push / 2;
         initial_push += (quarter);
-        for (int i = 0; i < quarter; ++i) {
-            list_stack->Push(i);
-        }
+        RequestHandler(list_stack, command1, quarter, 2, 8);
     }
 }
 
@@ -309,12 +282,12 @@ void TestingSystem<T>::CheckingTestListStack2() {
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
         std::clock_t start = clock();
-        ListStack<T> stack;
-        TestListStack2(&stack);
+        TestListStack2(&list_stack);
         std::clock_t end = clock();
         long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
+        list_stack.Destroy();
     }
     ot << std::fixed << std::showpoint  << std::setprecision(8) << (middle / 150.);
     ot << '\n';
@@ -322,18 +295,16 @@ void TestingSystem<T>::CheckingTestListStack2() {
 }
 
 template <typename T>
-void TestingSystem<T>::TestArrayStack3(IStack<T>* array_stack) {
+void TestingSystem<T>::TestArrayStack3(IStack<T> *array_stack) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(1, 2);
+    std::uniform_int_distribution<> distrib(0, 1);
+    std::vector<std::string> commands = {"push", "pop"};
     int instructions = 1e6;
+    RequestHandler(array_stack, commands[0], instructions, 13, 11);
     for (int i = 0; i < instructions; ++i) {
         int func = distrib(gen);
-        if (func == 1) {
-            array_stack->Push(i + 1);
-        } else {
-            array_stack->Pop();
-        }
+        RequestHandler(array_stack, commands[func], 1, 13, 11);
     }
 }
 
@@ -343,13 +314,14 @@ void TestingSystem<T>::CheckingTestArrayStack3() {
     long double middle = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
+        array_stack.Resize(best_initial_sz, increasing_sz.first.first, increasing_sz.first.second);
         std::clock_t start = clock();
-        ArrayStack<T> stack(best_initial_sz, increasing_sz.first);
-        TestArrayStack3(&stack);
+        TestArrayStack3(&array_stack);
         std::clock_t end = clock();
         long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
+        array_stack.Destroy();
     }
     ot << std::fixed << std::showpoint  << std::setprecision(8) << (middle / 150.);
     ot << '\n';
@@ -357,18 +329,16 @@ void TestingSystem<T>::CheckingTestArrayStack3() {
 }
 
 template <typename T>
-void TestingSystem<T>::TestListStack3(IStack<T>* list_stack) {
+void TestingSystem<T>::TestListStack3(IStack<T> *list_stack) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(1, 2);
+    std::uniform_int_distribution<> distrib(0, 1);
     int instructions = 1e6;
+    std::vector<std::string> commands = {"push", "pop"};
+    RequestHandler(list_stack, commands[0], instructions, 13, 11);
     for (int i = 0; i < instructions; ++i) {
         int func = distrib(gen);
-        if (func == 1) {
-            list_stack->Push(i + 1);
-        } else {
-            list_stack->Pop();
-        }
+        RequestHandler(list_stack, commands[func], 1, 13, 11);
     }
 }
 
@@ -379,12 +349,12 @@ void TestingSystem<T>::CheckingTestListStack3() {
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
         std::clock_t start = clock();
-        ListStack<T> stack;
-        TestListStack3(&stack);
+        TestListStack3(&list_stack);
         std::clock_t end = clock();
         long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
+        list_stack.Destroy();
     }
     ot << std::fixed << std::showpoint  << std::setprecision(8) << (middle / 150.);
     ot << '\n';
@@ -402,4 +372,3 @@ void TestingSystem<T>::TestingTwoStacks() {
     CheckingTestArrayStack3();
     CheckingTestListStack3();
 }
-
