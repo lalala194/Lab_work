@@ -303,8 +303,7 @@ void TestingSystem<T>::TestArrayStack3(IStack<T> *array_stack) {
     int instructions = 1e6;
     RequestHandler(array_stack, commands[0], instructions, 13, 11);
     for (int i = 0; i < instructions; ++i) {
-        int func = distrib(gen);
-        RequestHandler(array_stack, commands[func], 1, 13, 11);
+        RequestHandler(array_stack, commands[distrib(gen)], 1, 13, 11);
     }
 }
 
