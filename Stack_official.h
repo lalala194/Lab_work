@@ -114,4 +114,6 @@ private:
   ListStack<T> list_stack;
   clock_t testing_start = 0;
   clock_t testing_end = 0;
+  long double average_result = 0;
+
 };
