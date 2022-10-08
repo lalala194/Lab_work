@@ -3,11 +3,11 @@
 template <typename T>
 class IStack {
 public:
-  virtual ~IStack() = default;
+  virtual ~IStack();
   virtual void Push(T value) = 0;
   virtual T Top() = 0;
   virtual void Pop() = 0;
-  virtual void Destroy() = 0;
+  virtual void Clear() = 0;
   virtual bool IsEmpty() = 0;
   virtual size_t Size() = 0;
 };
@@ -26,7 +26,7 @@ public:
   void Push(T value) override final;
   T Top() override final;
   void Pop() override final;
-  void Destroy() override final;
+  void Clear() override final;
   bool IsEmpty() override final;
   size_t Size() override final;
   
@@ -53,7 +53,7 @@ public:
   void Push(T value) override final;
   void Pop() override final;
   T Top() override final;
-  void Destroy() override final;
+  void Clear() override final;
   bool IsEmpty() override final;
   size_t Size() override final;
   
@@ -109,7 +109,9 @@ private:
   void ExecutePop(IStack<T>* stack, size_t number_of_elements);
   
   uint64_t best_initial_sz = 0;
-  std::pair<std::pair<uint64_t, uint64_t>, long double> increasing_sz = {{0, 0}, 0.0};
+  std::pair<std::pair<uint64_t, uint64_t>, long double> increasing_sz = {{0, 0}, 4};
   ArrayStack<T> array_stack;
   ListStack<T> list_stack;
+  clock_t testing_start = 0;
+  clock_t testing_end = 0;
 };
