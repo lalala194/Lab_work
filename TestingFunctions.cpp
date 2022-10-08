@@ -51,10 +51,10 @@ void TestingSystem<T>::TestingInitialSize() {
         long double middle = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
             array_stack.Resize(init_size);
-            std::clock_t start = clock();
+            testing_start = clock();
             TestRequester(&array_stack);
-            std::clock_t end = clock();
-            long double seconds = (long double)(end - start) / CLOCKS_PER_SEC;
+            testing_end = clock();
+            long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
             ot << std::fixed << std::showpoint  << std::setprecision(8) << seconds << " ";
             middle += seconds;
             array_stack.Destroy();
@@ -87,10 +87,10 @@ void TestingSystem<T>::TestingIncreasingOnSize() {
         long double middle = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
             array_stack.Resize(best_initial_sz, candidates);
-            std::clock_t start = clock();
+            testing_start  = clock();
             TestRequester(&array_stack);
-            std::clock_t end = clock();
-            long double seconds = (long double)(end - start) / CLOCKS_PER_SEC;
+            testing_end = clock();
+            long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
             ot << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
             middle += seconds;
             array_stack.Destroy();
@@ -123,10 +123,10 @@ void TestingSystem<T>::TestingIncreasingInSize() {
         long double middle = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
             array_stack.Resize(best_initial_sz, candidates.first, candidates.second);
-            std::clock_t start = clock();
+            testing_start  = clock();
             TestRequester(&array_stack);
-            std::clock_t end = clock();
-            long double seconds = (long double)(end - start) / CLOCKS_PER_SEC;
+            testing_end = clock();
+            long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
             ot << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
             middle += seconds;
             array_stack.Destroy();
@@ -174,10 +174,10 @@ void TestingSystem<T>::CheckingTestArrayStack1() {
     array_stack.Destroy();
     for (size_t cases = 0; cases < test_amount; ++cases) {
         array_stack.Resize(best_initial_sz, increasing_sz.first.first, increasing_sz.first.second);
-        std::clock_t start = clock();
+        testing_start  = clock();
         TestArrayStack1(&array_stack);
-        std::clock_t end = clock();
-        long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
+        testing_end = clock();
+        long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
         array_stack.Destroy();
@@ -208,10 +208,10 @@ void TestingSystem<T>::CheckingTestListStack1() {
     long double middle = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
-        std::clock_t start = clock();
+        testing_start  = clock();
         TestListStack1(&list_stack);
-        std::clock_t end = clock();
-        long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
+        testing_end = clock();
+        long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
         list_stack.Destroy();
@@ -245,10 +245,10 @@ void TestingSystem<T>::CheckingTestArrayStack2() {
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
         array_stack.Resize(best_initial_sz, increasing_sz.first.first, increasing_sz.first.second);
-        std::clock_t start = clock();
+        testing_start  = clock();
         TestArrayStack2(&array_stack);
-        std::clock_t end = clock();
-        long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
+        testing_end = clock();
+        long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
         ot << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
         array_stack.Destroy();
@@ -281,10 +281,10 @@ void TestingSystem<T>::CheckingTestListStack2() {
     long double middle = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
-        std::clock_t start = clock();
+        testing_start  = clock();
         TestListStack2(&list_stack);
-        std::clock_t end = clock();
-        long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
+        testing_end = clock();
+        long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
         list_stack.Destroy();
@@ -315,10 +315,10 @@ void TestingSystem<T>::CheckingTestArrayStack3() {
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
         array_stack.Resize(best_initial_sz, increasing_sz.first.first, increasing_sz.first.second);
-        std::clock_t start = clock();
+        testing_start = clock();
         TestArrayStack3(&array_stack);
-        std::clock_t end = clock();
-        long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
+        testing_end = clock();
+        long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
         array_stack.Destroy();
@@ -348,10 +348,10 @@ void TestingSystem<T>::CheckingTestListStack3() {
     long double middle = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
-        std::clock_t start = clock();
+        testing_start  = clock();
         TestListStack3(&list_stack);
-        std::clock_t end = clock();
-        long double seconds = static_cast<long double>(end - start) / CLOCKS_PER_SEC;
+        testing_end = clock();
+        long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
         ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         middle += seconds;
         list_stack.Destroy();
