@@ -51,7 +51,7 @@ void ArrayStack<T>::Resize(uint64_t initial_size, uint64_t increasing_on) {
 }
 
 template <typename T>
-void ArrayStack<T>::Destroy() {
+void ArrayStack<T>::Clear() {
   if (array == nullptr) {
     return;
   }
@@ -63,8 +63,11 @@ void ArrayStack<T>::Destroy() {
 }
 
 template <typename T>
-ArrayStack<T>::~ArrayStack<T>() { Destroy(); }
+ArrayStack<T>::~ArrayStack<T>() { Clear(); }
 
+// В методе Push, когда в случае size >= capacity,
+// рассматривается два случая, когда происходит увеличение capacity на
+// некоторую константу и когда происходит увеличение capacity во сколько-то раз.
 template <typename T>
 void ArrayStack<T>::Push(T value) {
   array[size] = value;
@@ -114,7 +117,7 @@ void ListStack<T>::Push(T value) {
 }
 
 template <typename T>
-void ListStack<T>::Destroy() {
+void ListStack<T>::Clear() {
   while (!IsEmpty()) {
     Pop();
   }
@@ -133,7 +136,7 @@ void ListStack<T>::Pop() {
 }
 
 template <typename T>
-ListStack<T>::~ListStack() { Destroy(); }
+ListStack<T>::~ListStack() { Clear(); }
 
 template <typename T>
 T ListStack<T>::Top() {return head_->val; }
