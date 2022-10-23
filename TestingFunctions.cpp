@@ -42,12 +42,12 @@ void TestingSystem<T>::TestRequester(IStack<T>* array_stack) {
 
 template <typename T>
 void TestingSystem<T>::TestingInitialSize() {
-    std::ofstream ot("Initial_optimal_size1.txt");
+    output("Initial_optimal_size1.txt");
     std::vector<uint64_t> initial_data = {10, 100, 1000, 5000, 10000, 50000, 75000, 100000};
     std::vector<long double> working_time;
     size_t test_amount = 150;
     for (auto init_size : initial_data) {
-        ot << init_size << '\n';
+        output << init_size << '\n';
         average_result = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
             array_stack.Resize(init_size);
@@ -55,14 +55,14 @@ void TestingSystem<T>::TestingInitialSize() {
             TestRequester(&array_stack);
             testing_end = clock();
             long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
-            ot << std::fixed << std::showpoint  << std::setprecision(8) << seconds << " ";
+            output << std::fixed << std::showpoint  << std::setprecision(8) << seconds << " ";
             average_result += seconds;
             array_stack.Destroy();
         }
         average_result /= (150.);
-        ot << std::fixed << std::showpoint  << std::setprecision(8) << average_result;
-        ot << '\n';
-        ot << '\n';
+        output << std::fixed << std::showpoint  << std::setprecision(8) << average_result;
+        output << '\n';
+        output << '\n';
         working_time.push_back(average_result);
     }
     size_t index_of_best = 0;
@@ -78,12 +78,12 @@ void TestingSystem<T>::TestingInitialSize() {
 
 template <typename T>
 void TestingSystem<T>::TestingIncreasingOnSize() {
-    std::ofstream ot("optimal_increasing_size_BY_some.txt");
+    output("optimal_increasing_size_BY_some.txt");
     std::vector<uint64_t> increasing_on_candidates = {1000, 5000, 10000, 50000, 75000, 100000};
     std::vector<long double> working_time;
     size_t test_amount = 150;
     for (auto candidates : increasing_on_candidates) {
-        ot << candidates << '\n';
+        output << candidates << '\n';
         average_result = 0;
         for (size_t cases = 0; cases < test_amount; ++cases) {
             array_stack.Resize(best_initial_sz, candidates);
@@ -91,14 +91,14 @@ void TestingSystem<T>::TestingIncreasingOnSize() {
             TestRequester(&array_stack);
             testing_end = clock();
             long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
-            ot << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
+            output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
             average_result += seconds;
             array_stack.Destroy();
         }
         average_result /= (150.);
-        ot << std::fixed << std::showpoint << std::setprecision(8) << average_result;
-        ot << '\n';
-        ot << '\n';
+        output << std::fixed << std::showpoint << std::setprecision(8) << average_result;
+        output << '\n';
+        output << '\n';
         working_time.push_back(average_result);
     }
     size_t index_of_best = 0;
@@ -114,40 +114,60 @@ void TestingSystem<T>::TestingIncreasingOnSize() {
 
 template <typename T>
 void TestingSystem<T>::TestingIncreasingInSize() {
-    std::ofstream ot("optimal_increasing_size_IN_some.txt");
-    std::vector<std::pair<uint64_t, uint64_t>> increasing_in_candidates = {{9, 8}, {4, 3}, {3, 2}, {8, 5}, {2, 1}, {9, 4}, {10, 4}};
-    std::vector<long double> working_time;
-    size_t test_amount = 150;
-    for (auto candidates : increasing_in_candidates) {
-        ot << candidates.first << " " << candidates.second << '\n';
-        average_result = 0;
-        for (size_t cases = 0; cases < test_amount; ++cases) {
-            array_stack.Resize(best_initial_sz, candidates.first, candidates.second);
-            testing_start  = clock();
-            TestRequester(&array_stack);
-            testing_end = clock();
-            long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
-            ot << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
-            average_result += seconds;
-            array_stack.Destroy();
+    std::string name = "data_amount";
+    std::string file_name;
+    std::vector<std::vector<std::pair<int, int>>> increasing_in_candidates;
+    std::vector<std::pair<int, int>> first_set_candidates = {{9, 8}, {4, 3}, {3, 2}, {8, 5}, {2, 1}, {9, 4}, {10, 4}};
+    std::vector<std::pair<int, int>> second_set_candidates = {{11, 4}, {14, 5}, {12, 4}, {31, 10}, {13, 4}, {10, 3}, {14, 4}};
+    std::vector<std::pair<int, int>> third_set_candidates = {{18, 5}, {15, 4}, {39, 10}, {16, 4}, {405, 100}, {21, 5}, {17, 4}, {22, 5}, {18, 4}};
+    std::vector<std::pair<int, int>> fourth_set_candidates = {{93, 20}, {24, 5}, {20, 4}, {103, 20}, {21, 4}, {107, 20}, {22, 4}};
+    std::vector<std::vector<long double>> working_time;
+    std::vector<long double> temporary;
+    increasing_in_candidates.push_back(first_set_candidates);
+    increasing_in_candidates.push_back(second_set_candidates);
+    increasing_in_candidates.push_back(third_set_candidates);
+    increasing_in_candidates.push_back(fourth_set_candidates);
+    for (size_t i = 0; i < increasing_in_candidates.size(); ++i) {
+        file_name = name + std::to_string(i + 1);
+        output(file_name);
+        size_t test_amount = 150;
+        for (auto candidates : increasing_in_candidates[i]) {
+            output << candidates.first << " " << candidates.second << '\n';
+            average_result = 0;
+            for (size_t cases = 0; cases < test_amount; ++cases) {
+                array_stack.Resize(best_initial_sz, candidates.first, candidates.second);
+                testing_start = clock();
+                TestRequester(&array_stack);
+                testing_end = clock();
+                long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
+                output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
+                average_result += seconds;
+                array_stack.Destroy();
+                
+            }
+            average_result /= (150.);
+            output << std::fixed << std::showpoint << std::setprecision(8) << average_result;
+            output << '\n';
+            output << '\n';
+            temporary.push_back(average_result);
         }
-        average_result /= (150.);
-        ot << std::fixed << std::showpoint << std::setprecision(8) << average_result;
-        ot << '\n';
-        ot << '\n';
-        working_time.push_back(average_result);
+        working_time.push_back(temporary);
+        temporary.clear();
     }
-    
-    size_t index_of_best = 0;
+    size_t index_of_best1 = 0;
+    size_t index_of_best2 = 0;
     long double temp = 10.0;
     for (size_t i = 0; i < working_time.size(); ++i) {
-        if (working_time[i] < temp) {
-            temp = working_time[i];
-            index_of_best = i;
+        for (size_t j = 0; j < working_time[i].size(); ++j) {
+            if (working_time[i][j] < temp) {
+                temp = working_time[i][j];
+                index_of_best1 = i;
+                index_of_best2 = j;
+            }
         }
     }
-    if (increasing_sz.second > working_time[index_of_best]) {
-        increasing_sz = {{increasing_in_candidates[index_of_best].first, increasing_in_candidates[index_of_best].second}, working_time[index_of_best]};
+    if (increasing_sz.second > working_time[index_of_best1][index_of_best2]) {
+        increasing_sz = {increasing_in_candidates[index_of_best1][index_of_best2], working_time[index_of_best1][index_of_best2]};
     }
 }
 
@@ -168,7 +188,7 @@ void TestingSystem<T>::TestArrayStack1(IStack<T> *array_stack) {
 
 template <typename T>
 void TestingSystem<T>::CheckingTestArrayStack1() {
-    std::ofstream ot("comparing_two_stacks.txt");
+    output("comparing_two_stacks.txt");
     average_result = 0;
     size_t test_amount = 150;
     array_stack.Destroy();
@@ -178,13 +198,13 @@ void TestingSystem<T>::CheckingTestArrayStack1() {
         TestArrayStack1(&array_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         average_result += seconds;
         array_stack.Destroy();
     }
-    ot << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
-    ot << '\n';
-    ot << '\n';
+    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << '\n';
+    output << '\n';
 }
 
 template <typename T>
@@ -204,7 +224,7 @@ void TestingSystem<T>::TestListStack1(IStack<T> *list_stack) {
 
 template <typename T>
 void TestingSystem<T>::CheckingTestListStack1() {
-    std::ofstream ot("comparing_two_stacks.txt");
+    output("comparing_two_stacks.txt");
     average_result = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
@@ -212,13 +232,13 @@ void TestingSystem<T>::CheckingTestListStack1() {
         TestListStack1(&list_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         average_result += seconds;
         list_stack.Destroy();
     }
-    ot << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
-    ot << '\n';
-    ot << '\n';
+    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << '\n';
+    output << '\n';
 }
 
 template <typename T>
@@ -240,7 +260,7 @@ void TestingSystem<T>::TestArrayStack2(IStack<T> *array_stack) {
 
 template <typename T>
 void TestingSystem<T>::CheckingTestArrayStack2() {
-    std::ofstream ot("comparing_two_stacks.txt");
+    output("comparing_two_stacks.txt");
     average_result = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
@@ -249,13 +269,13 @@ void TestingSystem<T>::CheckingTestArrayStack2() {
         TestArrayStack2(&array_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        ot << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         average_result += seconds;
         array_stack.Destroy();
     }
-    ot << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
-    ot << '\n';
-    ot << '\n';
+    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << '\n';
+    output << '\n';
 }
 
 template <typename T>
@@ -277,7 +297,7 @@ void TestingSystem<T>::TestListStack2(IStack<T> *list_stack) {
 
 template <typename T>
 void TestingSystem<T>::CheckingTestListStack2() {
-    std::ofstream ot("comparing_two_stacks.txt");
+    output("comparing_two_stacks.txt");
     average_result = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
@@ -285,13 +305,13 @@ void TestingSystem<T>::CheckingTestListStack2() {
         TestListStack2(&list_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         average_result += seconds;
         list_stack.Destroy();
     }
-    ot << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
-    ot << '\n';
-    ot << '\n';
+    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << '\n';
+    output << '\n';
 }
 
 template <typename T>
@@ -309,7 +329,7 @@ void TestingSystem<T>::TestArrayStack3(IStack<T> *array_stack) {
 
 template <typename T>
 void TestingSystem<T>::CheckingTestArrayStack3() {
-    std::ofstream ot("comparing_two_stacks.txt");
+    output("comparing_two_stacks.txt");
     average_result = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
@@ -318,13 +338,13 @@ void TestingSystem<T>::CheckingTestArrayStack3() {
         TestArrayStack3(&array_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         average_result += seconds;
         array_stack.Destroy();
     }
-    ot << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
-    ot << '\n';
-    ot << '\n';
+    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << '\n';
+    output << '\n';
 }
 
 template <typename T>
@@ -342,7 +362,7 @@ void TestingSystem<T>::TestListStack3(IStack<T> *list_stack) {
 
 template <typename T>
 void TestingSystem<T>::CheckingTestListStack3() {
-    std::ofstream ot("comparing_two_stacks.txt");
+    output("comparing_two_stacks.txt");
     average_result = 0;
     size_t test_amount = 150;
     for (size_t cases = 0; cases < test_amount; ++cases) {
@@ -350,13 +370,13 @@ void TestingSystem<T>::CheckingTestListStack3() {
         TestListStack3(&list_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        ot  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
         average_result += seconds;
         list_stack.Destroy();
     }
-    ot << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
-    ot << '\n';
-    ot << '\n';
+    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << '\n';
+    output << '\n';
 }
 
 template <typename T>
