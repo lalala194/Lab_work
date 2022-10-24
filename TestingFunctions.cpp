@@ -60,9 +60,7 @@ void TestingSystem<T>::TestingInitialSize() {
             array_stack.Destroy();
         }
         average_result /= (150.);
-        output << std::fixed << std::showpoint << std::setprecision(8) << average_result;
-        output << '\n';
-        output << '\n';
+        output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
         working_time.push_back(average_result);
     }
     size_t index_of_best = 0;
@@ -96,9 +94,7 @@ void TestingSystem<T>::TestingIncreasingOnSize() {
             array_stack.Destroy();
         }
         average_result /= (150.);
-        output << std::fixed << std::showpoint << std::setprecision(8) << average_result;
-        output << '\n';
-        output << '\n';
+        output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
         working_time.push_back(average_result);
     }
     size_t index_of_best = 0;
@@ -146,9 +142,7 @@ void TestingSystem<T>::TestingIncreasingInSize() {
                 
             }
             average_result /= (150.);
-            output << std::fixed << std::showpoint << std::setprecision(8) << average_result;
-            output << '\n';
-            output << '\n';
+            output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
             temporary.push_back(average_result);
         }
         working_time.push_back(temporary);
@@ -202,9 +196,8 @@ void TestingSystem<T>::CheckingTestArrayStack1() {
         average_result += seconds;
         array_stack.Destroy();
     }
-    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
-    output << '\n';
-    output << '\n';
+    average_result /= (150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
 }
 
 template <typename T>
@@ -236,9 +229,8 @@ void TestingSystem<T>::CheckingTestListStack1() {
         average_result += seconds;
         list_stack.Destroy();
     }
-    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
-    output << '\n';
-    output << '\n';
+    average_result /= (150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
 }
 
 template <typename T>
@@ -273,9 +265,8 @@ void TestingSystem<T>::CheckingTestArrayStack2() {
         average_result += seconds;
         array_stack.Destroy();
     }
-    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
-    output << '\n';
-    output << '\n';
+    average_result /= (150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
 }
 
 template <typename T>
@@ -309,9 +300,8 @@ void TestingSystem<T>::CheckingTestListStack2() {
         average_result += seconds;
         list_stack.Destroy();
     }
-    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
-    output << '\n';
-    output << '\n';
+    average_result /= (150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
 }
 
 template <typename T>
@@ -342,9 +332,8 @@ void TestingSystem<T>::CheckingTestArrayStack3() {
         average_result += seconds;
         array_stack.Destroy();
     }
-    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
-    output << '\n';
-    output << '\n';
+    average_result /= (150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
 }
 
 template <typename T>
@@ -374,9 +363,8 @@ void TestingSystem<T>::CheckingTestListStack3() {
         average_result += seconds;
         list_stack.Destroy();
     }
-    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
-    output << '\n';
-    output << '\n';
+    average_result /= (150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << average_result << "\n\n";
 }
 
 template <typename T>
