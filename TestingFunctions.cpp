@@ -55,12 +55,12 @@ void TestingSystem<T>::TestingInitialSize() {
             TestRequester(&array_stack);
             testing_end = clock();
             long double seconds = (long double)(testing_end - testing_start) / CLOCKS_PER_SEC;
-            output << std::fixed << std::showpoint  << std::setprecision(8) << seconds << " ";
+            output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
             average_result += seconds;
             array_stack.Destroy();
         }
         average_result /= (150.);
-        output << std::fixed << std::showpoint  << std::setprecision(8) << average_result;
+        output << std::fixed << std::showpoint << std::setprecision(8) << average_result;
         output << '\n';
         output << '\n';
         working_time.push_back(average_result);
@@ -198,11 +198,11 @@ void TestingSystem<T>::CheckingTestArrayStack1() {
         TestArrayStack1(&array_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
         average_result += seconds;
         array_stack.Destroy();
     }
-    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
     output << '\n';
     output << '\n';
 }
@@ -232,11 +232,11 @@ void TestingSystem<T>::CheckingTestListStack1() {
         TestListStack1(&list_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
         average_result += seconds;
         list_stack.Destroy();
     }
-    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
     output << '\n';
     output << '\n';
 }
@@ -269,11 +269,11 @@ void TestingSystem<T>::CheckingTestArrayStack2() {
         TestArrayStack2(&array_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        output << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
         average_result += seconds;
         array_stack.Destroy();
     }
-    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
     output << '\n';
     output << '\n';
 }
@@ -305,11 +305,11 @@ void TestingSystem<T>::CheckingTestListStack2() {
         TestListStack2(&list_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
         average_result += seconds;
         list_stack.Destroy();
     }
-    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
     output << '\n';
     output << '\n';
 }
@@ -338,11 +338,11 @@ void TestingSystem<T>::CheckingTestArrayStack3() {
         TestArrayStack3(&array_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
         average_result += seconds;
         array_stack.Destroy();
     }
-    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
     output << '\n';
     output << '\n';
 }
@@ -370,11 +370,11 @@ void TestingSystem<T>::CheckingTestListStack3() {
         TestListStack3(&list_stack);
         testing_end = clock();
         long double seconds = static_cast<long double>(testing_end - testing_start) / CLOCKS_PER_SEC;
-        output  << std::fixed << std::showpoint  << std::setprecision(8) <<  seconds << " ";
+        output << std::fixed << std::showpoint << std::setprecision(8) << seconds << " ";
         average_result += seconds;
         list_stack.Destroy();
     }
-    output << std::fixed << std::showpoint  << std::setprecision(8) << (average_result / 150.);
+    output << std::fixed << std::showpoint << std::setprecision(8) << (average_result / 150.);
     output << '\n';
     output << '\n';
 }
