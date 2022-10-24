@@ -7,4 +7,5 @@ int main() {
   test.TestingIncreasingOnSize();
   test.TestingIncreasingInSize();
   test.TestingTwoStacks();
+  return 0;
 }
